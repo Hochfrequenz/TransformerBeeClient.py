@@ -6,6 +6,7 @@
 ![Black status badge](https://github.com/Hochfrequenz/TransformerBeeClient.py/workflows/Formatting/badge.svg)
 
 This library is a Python HTTP client for transformer.bee aka edifact-bo4e-converter.
+We also maintain a [.NET version](https://github.com/Hochfrequenz/TransformerBeeClient.NET) of this client.
 
 It allows you to convert EDIFACT messages to BO4E and vice versa by speaking to Hochfrequenz's transformer.bee service.
 Note that the actual conversion happens in the transformer.bee service/backend, this library only provides a convenient way to use its API.
