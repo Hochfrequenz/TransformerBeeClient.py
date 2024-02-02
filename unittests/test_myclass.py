@@ -1,4 +1,4 @@
-from transformerbeeclient_x.mymodule import MyClass
+from transformerbeeclient.mymodule import MyClass
 
 
 class TestMyClass:
