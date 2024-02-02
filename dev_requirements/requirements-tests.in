@@ -1,2 +1,3 @@
 # specific requirements for the tox tests env
-pytest
+pytest!=8.0.0
+pytest-asyncio
