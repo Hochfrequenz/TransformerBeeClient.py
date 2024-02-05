@@ -47,7 +47,7 @@ class _ClientSessionMixin:  # pylint:disable=too-few-public-methods
 
     async def _get_session(
         self,
-        raise_for_status: bool = False,
+        raise_for_status: bool = True,
         max_connections: Optional[int] = None,
         own_response_class: Optional[Type[aiohttp.ClientResponse]] = None,
     ) -> ClientSession:
@@ -239,12 +239,38 @@ class UnauthenticatedTransformerBeeClient(
         return result
 
 
-class AuthenticatedTransformerBeeClient(_OAuthHttpClient, _ClientSessionMixin):  # pylint:disable=too-few-public-methods
+_hochfrequenz_token_url = URL("https://hochfreuqenz.eu.auth0.com/oauth/token")
+
+
+class AuthenticatedTransformerBeeClient(
+    _OAuthHttpClient, _ClientSessionMixin, _TransformerBeeClientBaseMixin
+):  # pylint:disable=too-few-public-methods
     """
     A client for the transformer.bee API (with OAuth2 authentication)
     """
 
-    def __init__(self, base_url: URL | str, oauth_client_id: str, oauth_client_secret: str, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, base_url: URL | str, oauth_client_id: str, oauth_client_secret: str, **kwargs):
+        super().__init__(
+            base_url=base_url,
+            oauth_client_id=oauth_client_id,
+            oauth_client_secret=oauth_client_secret,
+            oauth_token_url=_hochfrequenz_token_url,
+            **kwargs,
+        )
         _ClientSessionMixin.__init__(self)
-        raise NotImplementedError("This is not implemented yet")
+
+    async def convert_to_bo4e(self, edifact: str, edifact_format_version: EdifactFormatVersion) -> list[Marktnachricht]:
+        """
+        converts the given edifact to a list of marktnachrichten
+        """
+        session = await self._get_session()
+        result = await self._convert_to_bo4e(session, self._base_url, edifact, edifact_format_version)
+        return result
+
+    async def convert_to_edifact(self, boney_comb: BOneyComb, edifact_format_version: EdifactFormatVersion) -> str:
+        """
+        converts the given boneycomb to an edifact
+        """
+        session = await self._get_session()
+        result = await self._convert_to_edifact(session, self._base_url, boney_comb, edifact_format_version)
+        return result
