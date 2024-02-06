@@ -33,9 +33,8 @@ async def oauthenticated_client() -> AsyncGenerator[TransformerBeeClient, None]:
     # Those env variables shall be set by the Integration Test GitHub Action
     client_id = os.environ.get("AUTH0_TEST_CLIENT_ID")
     client_secret = os.environ.get("AUTH0_TEST_CLIENT_SECRET")
-    assert (client_id is not None) and (
-        client_secret is not None
-    )  # <-- use pytest.skip instead of assert for local tests
+    assert client_id is not None
+    assert client_secret is not None  # <-- use pytest.skip instead of assert for local tests
     client = AuthenticatedTransformerBeeClient(
         base_url=_test_system_url, oauth_client_id=client_id, oauth_client_secret=client_secret
     )
