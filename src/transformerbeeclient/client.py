@@ -286,8 +286,12 @@ class AuthenticatedTransformerBeeClient(
     """
 
     def __init__(self, base_url: URL | str, oauth_client_id: str, oauth_client_secret: str, **kwargs):
+        if isinstance(base_url, str):
+            _base_url = URL(base_url)
+        else:
+            _base_url = base_url
         super().__init__(
-            base_url=base_url,
+            base_url=_base_url,
             oauth_client_id=oauth_client_id,
             oauth_client_secret=oauth_client_secret,
             oauth_token_url=_hochfrequenz_token_url,
