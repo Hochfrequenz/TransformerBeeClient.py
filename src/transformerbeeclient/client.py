@@ -13,8 +13,9 @@ from typing import Optional, Type
 import aiohttp
 import jwt
 from aioauth_client import OAuth2Client
-from aiohttp import ClientSession, TCPConnector
+from aiohttp import ClientResponse, ClientSession, TCPConnector
 from maus.edifact import EdifactFormatVersion
+from pydantic import BaseModel
 from yarl import URL
 
 from transformerbeeclient.models.boneycomb import BOneyComb
@@ -47,7 +48,7 @@ class _ClientSessionMixin:  # pylint:disable=too-few-public-methods
 
     async def _get_session(
         self,
-        raise_for_status: bool = False,
+        raise_for_status: bool = True,
         max_connections: Optional[int] = None,
         own_response_class: Optional[Type[aiohttp.ClientResponse]] = None,
     ) -> ClientSession:
@@ -164,15 +165,50 @@ class _OAuthHttpClient(_ValidateTokenMixin, ABC):  # pylint:disable=too-few-publ
             access_token_url=str(oauth_token_url),
             logger=_logger,
         )
-
         self._token: Optional[str] = None  # the jwt token if we did an authenticated request before
         self._token_write_lock = asyncio.Lock()
+
+    async def _get_new_token(self) -> str:
+        """get a new JWT token from the oauth server"""
+        _logger.debug("Retrieving a new token")
+        token, _ = await self._oauth2client.get_access_token(
+            "code",
+            grant_type="client_credentials",
+            audience="https://transformer.bee",
+            # without the audience, you'll get an HTTP 403
+        )
+        return token
+
+    async def _get_oauth_token(self) -> str:
+        """
+        encapsulates the oauth part, such that it's e.g. easily mockable in tests
+        :returns the oauth token
+        """
+        async with self._token_write_lock:
+            if self._token is None:
+                _logger.info("Initially retrieving a new token")
+                self._token = await self._get_new_token()
+            elif not self._token_is_valid(self._token):
+                _logger.info("Token is not valid anymore, retrieving a new token")
+                self._token = await self._get_new_token()
+            else:
+                _logger.debug("Token is still valid, reusing it")
+        return self._token
 
 
 class _TransformerBeeClientBaseMixin:  # pylint:disable=too-few-public-methods
     """
     the stateless base functionality of both the authenticated and unauthenticated client
     """
+
+    async def _send_request(self, session: ClientSession, request_body: BaseModel, url: URL) -> ClientResponse:
+        if hasattr(self, "_get_oauth_token"):
+            token = await self._get_oauth_token()
+            headers = {"Authorization": f"Bearer {token}"}
+            response = await session.post(json=request_body.model_dump(by_alias=True), url=url, headers=headers)
+        else:
+            response = await session.post(json=request_body.model_dump(by_alias=True), url=url)
+        return response
 
     async def _convert_to_bo4e(
         self, session: ClientSession, base_url: URL, edifact: str, edifact_format_version: EdifactFormatVersion
@@ -184,7 +220,7 @@ class _TransformerBeeClientBaseMixin:  # pylint:disable=too-few-public-methods
             raise ValueError("edifact must not be empty")
         edi_to_bo4e_url = base_url / "v1" / "transformer" / "EdiToBo4E"
         request = EdifactToBo4eRequest(edifact=edifact, format_version=edifact_format_version)  # type:ignore[call-arg]
-        response = await session.post(json=request.dict(by_alias=True), url=edi_to_bo4e_url)
+        response = await self._send_request(session, request, edi_to_bo4e_url)
         response_json = await response.json()
         response_model = EdifactToBo4eResponse.model_validate(response_json)
         result = [Marktnachricht.model_validate(x) for x in json.loads(response_model.bo4e_json.replace("\\n", "\n"))]
@@ -198,9 +234,9 @@ class _TransformerBeeClientBaseMixin:  # pylint:disable=too-few-public-methods
         """
         bo4e_to_edi_url = base_url / "v1" / "transformer" / "Bo4ETransactionToEdi"
         request = Bo4eTransactionToEdifactRequest(  # type:ignore[call-arg]
-            bo4e_json_string=boney_comb.json(), format_version=edifact_format_version
+            bo4e_json_string=boney_comb.model_dump_json(), format_version=edifact_format_version
         )
-        response = await session.post(json=request.dict(by_alias=True), url=bo4e_to_edi_url)
+        response = await self._send_request(session, request, bo4e_to_edi_url)
         response_json = await response.json()
         response_model = Bo4eTransactionToEdifactResponse.model_validate(response_json)
         return response_model.edifact
@@ -239,12 +275,42 @@ class UnauthenticatedTransformerBeeClient(
         return result
 
 
-class AuthenticatedTransformerBeeClient(_OAuthHttpClient, _ClientSessionMixin):  # pylint:disable=too-few-public-methods
+_hochfrequenz_token_url = URL("https://hochfrequenz.eu.auth0.com/oauth/token")
+
+
+class AuthenticatedTransformerBeeClient(
+    _OAuthHttpClient, _ClientSessionMixin, _TransformerBeeClientBaseMixin
+):  # pylint:disable=too-few-public-methods
     """
     A client for the transformer.bee API (with OAuth2 authentication)
     """
 
-    def __init__(self, base_url: URL | str, oauth_client_id: str, oauth_client_secret: str, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, base_url: URL | str, oauth_client_id: str, oauth_client_secret: str, **kwargs):
+        if isinstance(base_url, str):
+            _base_url = URL(base_url)
+        else:
+            _base_url = base_url
+        super().__init__(
+            base_url=_base_url,
+            oauth_client_id=oauth_client_id,
+            oauth_client_secret=oauth_client_secret,
+            oauth_token_url=_hochfrequenz_token_url,
+            **kwargs,
+        )
         _ClientSessionMixin.__init__(self)
-        raise NotImplementedError("This is not implemented yet")
+
+    async def convert_to_bo4e(self, edifact: str, edifact_format_version: EdifactFormatVersion) -> list[Marktnachricht]:
+        """
+        converts the given edifact to a list of marktnachrichten
+        """
+        session = await self._get_session()
+        result = await self._convert_to_bo4e(session, self._base_url, edifact, edifact_format_version)
+        return result
+
+    async def convert_to_edifact(self, boney_comb: BOneyComb, edifact_format_version: EdifactFormatVersion) -> str:
+        """
+        converts the given boneycomb to an edifact
+        """
+        session = await self._get_session()
+        result = await self._convert_to_edifact(session, self._base_url, boney_comb, edifact_format_version)
+        return result
