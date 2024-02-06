@@ -4,8 +4,11 @@ from typing import AsyncGenerator
 import pytest
 from yarl import URL
 
-from transformerbeeclient.client import AuthenticatedTransformerBeeClient, UnauthenticatedTransformerBeeClient
-from transformerbeeclient.protocols import TransformerBeeClient
+from transformerbeeclient import (
+    AuthenticatedTransformerBeeClient,
+    TransformerBeeClient,
+    UnauthenticatedTransformerBeeClient,
+)
 
 _local_docker_url = URL("http://localhost:5021")
 
