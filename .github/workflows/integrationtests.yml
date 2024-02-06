@@ -1,13 +1,13 @@
 name: "Integration Tests"
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 jobs:
   pytest:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ["3.11", "3.12"]
-        os: [ubuntu-latest]
+        python-version: [ "3.11", "3.12" ]
+        os: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
@@ -34,3 +34,6 @@ jobs:
       - name: Run the Integration Tests via Tox
         run: |
           tox -e integrationtests
+        env: # this is for the tests with real oauth-checks
+          CLIENT_ID: ${{ secrets.AUTH0_TEST_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.AUTH0_TEST_CLIENT_SECRET }}
