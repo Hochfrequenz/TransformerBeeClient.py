@@ -92,9 +92,8 @@ For development of this library, follow the instructions in our [Python Template
 
 ### Release (CI/CD)
 
-To release a new version of this library, [create a new release](https://github.com/Hochfrequenz/tTransformerBeeClient.py/releases/new) in GitHub.
+To release a new version of this library, [create a new release](https://github.com/Hochfrequenz/TransformerBeeClient.py/releases/new) in GitHub.
 Make sure its tag starts with `v` and the version number, e.g. `v1.2.3`.
-Tags without a release wont trigger the release workflow; This enforces that you have to write a changelog before releasing.
 Releases are not restricted to the main branch but we prefer them to happen there.
 
 ## Contribute
