@@ -205,9 +205,9 @@ class _TransformerBeeClientBaseMixin:  # pylint:disable=too-few-public-methods
         if hasattr(self, "_get_oauth_token"):
             token = await self._get_oauth_token()
             headers = {"Authorization": f"Bearer {token}"}
-            response = await session.post(json=request_body.dict(by_alias=True), url=url, headers=headers)
+            response = await session.post(json=request_body.model_dump(by_alias=True), url=url, headers=headers)
         else:
-            response = await session.post(json=request_body.dict(by_alias=True), url=url)
+            response = await session.post(json=request_body.model_dump(by_alias=True), url=url)
         return response
 
     async def _convert_to_bo4e(
