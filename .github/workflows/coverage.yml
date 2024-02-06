@@ -34,3 +34,6 @@ jobs:
       - name: Run Tests and Record Coverage
         run: |
           tox -e coverage
+        env: # this is for the tests with real oauth-checks
+          AUTH0_TEST_CLIENT_ID: ${{ secrets.AUTH0_TEST_CLIENT_ID }}
+          AUTH0_TEST_CLIENT_SECRET: ${{ secrets.AUTH0_TEST_CLIENT_SECRET }}

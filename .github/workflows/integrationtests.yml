@@ -35,5 +35,5 @@ jobs:
         run: |
           tox -e integrationtests
         env: # this is for the tests with real oauth-checks
-          CLIENT_ID: ${{ secrets.AUTH0_TEST_CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.AUTH0_TEST_CLIENT_SECRET }}
+          AUTH0_TEST_CLIENT_ID: ${{ secrets.AUTH0_TEST_CLIENT_ID }}
+          AUTH0_TEST_CLIENT_SECRET: ${{ secrets.AUTH0_TEST_CLIENT_SECRET }}
