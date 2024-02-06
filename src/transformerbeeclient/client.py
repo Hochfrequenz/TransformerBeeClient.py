@@ -234,7 +234,7 @@ class _TransformerBeeClientBaseMixin:  # pylint:disable=too-few-public-methods
         """
         bo4e_to_edi_url = base_url / "v1" / "transformer" / "Bo4ETransactionToEdi"
         request = Bo4eTransactionToEdifactRequest(  # type:ignore[call-arg]
-            bo4e_json_string=boney_comb.json(), format_version=edifact_format_version
+            bo4e_json_string=boney_comb.model_dump_json(), format_version=edifact_format_version
         )
         response = await self._send_request(session, request, bo4e_to_edi_url)
         response_json = await response.json()
