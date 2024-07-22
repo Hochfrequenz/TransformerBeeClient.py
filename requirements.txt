@@ -45,7 +45,7 @@ marshmallow==3.20.2
     # via maus
 maus==0.4.2
     # via transformerbeeclient (pyproject.toml)
-more-itertools==10.2.0
+more-itertools==10.3.0
     # via maus
 multidict==6.0.5
     # via
@@ -63,7 +63,7 @@ sniffio==1.3.1
     # via
     #   anyio
     #   httpx
-typing-extensions==4.10.0
+typing-extensions==4.12.2
     # via
     #   pydantic
     #   pydantic-core
