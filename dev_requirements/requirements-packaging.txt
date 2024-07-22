@@ -4,9 +4,9 @@
 #
 #    pip-compile dev_requirements/requirements-packaging.in
 #
-build==1.1.1
-    # via -r requirements-packaging.in
-certifi==2024.2.2
+build==1.2.1
+    # via -r dev_requirements/requirements-packaging.in
+certifi==2024.7.4
     # via requests
 cffi==1.16.0
     # via cryptography
@@ -64,11 +64,11 @@ rich==13.7.1
     # via twine
 secretstorage==3.3.3
     # via keyring
-twine==5.0.0
-    # via -r requirements-packaging.in
-urllib3==2.2.1
+twine==5.1.1
+    # via -r dev_requirements/requirements-packaging.in
+urllib3==2.2.2
     # via
     #   requests
     #   twine
-zipp==3.18.1
+zipp==3.19.1
     # via importlib-metadata
