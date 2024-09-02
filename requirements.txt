@@ -22,7 +22,7 @@ attrs==23.2.0
     #   maus
 brotli==1.1.0
     # via aiohttp
-certifi==2024.2.2
+certifi==2024.8.30
     # via
     #   httpcore
     #   httpx
