@@ -6,7 +6,7 @@
 #
 aioauth-client==0.29.0
     # via transformerbeeclient (pyproject.toml)
-aiohttp[speedups]==3.9.5
+aiohttp[speedups]==3.11.14
     # via
     #   aiohttp
     #   transformerbeeclient (pyproject.toml)
