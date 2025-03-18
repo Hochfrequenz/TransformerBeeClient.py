@@ -47,7 +47,7 @@ maus==0.6.1
     # via transformerbeeclient (pyproject.toml)
 more-itertools==10.6.0
     # via maus
-multidict==6.0.5
+multidict==6.2.0
     # via
     #   aiohttp
     #   yarl
