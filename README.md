@@ -64,14 +64,14 @@ There are two main methods to convert between EDIFACT and BO4E:
 - `edifact_to_bo4e`
 - `bo4e_to_edifact`
 
-Both have an `EdifactFormatVersion` as argument (imported from [maus](https://github.com/Hochfrequenz/mig_ahb_utility_stack)), which denotes which version of the EDIFACT format you want to use.
+Both have an `EdifactFormatVersion` as argument (imported from [efoli](https://github.com/Hochfrequenz/efoli)), which denotes which version of the EDIFACT format you want to use.
 We group all the different versions of the EDIFACT format into an enum, so you can easily choose the one you need.
 E.g. `EdifactFormatVersion.FV2310` stands for all MIG/AHB versions valid since 2023-10-01.
 
 
 #### Convert EDIFACT to BO4E
 ```python
-from maus.edifact import EdifactFormatVersion
+from efoli import EdifactFormatVersion
 # client instantiation goes here
 
 bo4e = await client.edifact_to_bo4e("UNA:+,? 'UNB...", EdifactFormatVersion.FV2310)
@@ -79,7 +79,7 @@ bo4e = await client.edifact_to_bo4e("UNA:+,? 'UNB...", EdifactFormatVersion.FV23
 
 #### Convert BO4E to EDIFACT
 ```python
-from maus.edifact import EdifactFormatVersion
+from efoli import EdifactFormatVersion
 from transformerbeeclient.models.boneycomb import BOneyComb
 # client instantiation goes here
 
