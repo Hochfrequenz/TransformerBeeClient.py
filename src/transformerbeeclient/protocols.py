@@ -4,7 +4,7 @@ protocols for typing only; They are useful to mock and patch stuff
 
 from typing import Protocol
 
-from maus.edifact import EdifactFormatVersion
+from efoli import EdifactFormatVersion
 
 from transformerbeeclient.models.boneycomb import BOneyComb
 from transformerbeeclient.models.marktnachricht import Marktnachricht
