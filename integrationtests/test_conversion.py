@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from maus.edifact import EdifactFormatVersion
+from efoli import EdifactFormatVersion
 
 from transformerbeeclient.client import TransformerBeeClient
 from transformerbeeclient.models.boneycomb import BOneyComb

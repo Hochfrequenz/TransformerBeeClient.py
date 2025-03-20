@@ -14,7 +14,7 @@ import aiohttp
 import jwt
 from aioauth_client import OAuth2Client
 from aiohttp import ClientResponse, ClientSession, TCPConnector
-from maus.edifact import EdifactFormatVersion
+from efoli import EdifactFormatVersion
 from pydantic import BaseModel
 from yarl import URL
 

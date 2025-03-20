@@ -2,7 +2,7 @@
 models used in the transformer.bee API
 """
 
-from maus.edifact import EdifactFormatVersion
+from efoli import EdifactFormatVersion
 from pydantic import BaseModel, ConfigDict, Field
 
 

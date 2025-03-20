@@ -17,9 +17,7 @@ annotated-types==0.7.0
 anyio==4.9.0
     # via httpx
 attrs==25.3.0
-    # via
-    #   aiohttp
-    #   maus
+    # via aiohttp
 brotli==1.1.0
     # via aiohttp
 certifi==2025.1.31
@@ -27,7 +25,7 @@ certifi==2025.1.31
     #   httpcore
     #   httpx
 efoli==1.4.0
-    # via maus
+    # via transformerbeeclient (pyproject.toml)
 frozenlist==1.5.0
     # via
     #   aiohttp
@@ -43,18 +41,10 @@ idna==3.10
     #   anyio
     #   httpx
     #   yarl
-marshmallow==3.26.1
-    # via maus
-maus==0.6.1
-    # via transformerbeeclient (pyproject.toml)
-more-itertools==10.6.0
-    # via maus
 multidict==6.2.0
     # via
     #   aiohttp
     #   yarl
-packaging==24.2
-    # via marshmallow
 propcache==0.3.0
     # via
     #   aiohttp

@@ -20,7 +20,7 @@ classifiers = [
 dependencies = [
     "pydantic>=2.0.0",
     "aiohttp[speedups]>=3.9.3",
-    "maus>=0.4.2",
+    "efoli>=1.4.0",
     "pyjwt",
     "aioauth_client"
 ]     # add all the dependencies here
