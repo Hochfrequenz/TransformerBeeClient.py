@@ -44,7 +44,7 @@ def start_transformer_bee_on_localhost(docker_network: Network) -> Generator[int
     Starts transformer.bee.
     Yields the exposed http (REST) port.
     """
-    transformer_bee_container = DockerContainer("ghcr.io/enercity/edifact-bo4e-converter/edifactbo4econverter:v1.1.29")
+    transformer_bee_container = DockerContainer("ghcr.io/enercity/edifact-bo4e-converter/edifactbo4econverter:v1.3.1")
     transformer_bee_container.with_network(docker_network)
     transformer_bee_container.with_exposed_ports(_TRANSFORMER_BEE_HTTP_REST_PORT)
     transformer_bee_container.with_env("StorageProvider", "Directory")
