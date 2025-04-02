@@ -2,7 +2,7 @@
 TransformerBeeClient is a Python client for the transformer.bee API.
 """
 
-from .client import AuthenticatedTransformerBeeClient, TransformerBeeClient, UnauthenticatedTransformerBeeClient
+from .client import AuthenticatedTransformerBeeClient, UnauthenticatedTransformerBeeClient
 from .models.boneycomb import BOneyComb
 from .models.marktnachricht import Marktnachricht
 from .protocols import CanConvertToBo4e, CanConvertToEdifact, TransformerBeeClient
