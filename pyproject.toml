@@ -46,11 +46,13 @@ spellcheck = [
 ]
 tests = [
     "pytest==8.3.5",
-    "pytest-asyncio==0.26.0"
+    "pytest-asyncio==0.26.0",
+    "testcontainers==4.9.2"
 ]
 type_check = [
     "mypy[pydantic]==1.15.0",
-    "types-pytz==2025.1.0.20250318"
+    "types-pytz==2025.1.0.20250318",
+    "types-docker==7.1.0.20241229"
 ]
 
 [project.urls]
