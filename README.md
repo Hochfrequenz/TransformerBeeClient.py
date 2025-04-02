@@ -37,7 +37,7 @@ Both the unauthenticated and the authenticated client implement the `Transformer
 If you're hosting transformer.bee in the same network or your localhost and there is no authentication, you can instantiate the client
 ```python
 from yarl import URL
-from transformerbeeclient.client import UnauthenticatedTransformerBeeClient
+from transformerbeeclient import UnauthenticatedTransformerBeeClient
 
 client = UnauthenticatedTransformerBeeClient(base_url=URL("http://localhost:5021"))
 ```
@@ -80,7 +80,7 @@ bo4e = await client.edifact_to_bo4e("UNA:+,? 'UNB...", EdifactFormatVersion.FV23
 #### Convert BO4E to EDIFACT
 ```python
 from efoli import EdifactFormatVersion
-from transformerbeeclient.models.boneycomb import BOneyComb
+from transformerbeeclient import BOneyComb
 # client instantiation goes here
 
 boney_comb = BOneyComb.model_validate({"stammdaten":[...], "transaktionsdaten":{...}})

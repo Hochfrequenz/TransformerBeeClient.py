@@ -5,5 +5,5 @@ let's keep it for later
 
 
 class TestSomething:
-    def test_some_function(self):
+    def test_some_function(self) -> None:
         pass
