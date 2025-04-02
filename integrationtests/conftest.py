@@ -50,6 +50,7 @@ def start_transformer_bee_on_localhost(docker_network: Network) -> Generator[int
     transformer_bee_container.with_env("StorageProvider", "Directory")
     transformer_bee_container.start()
     wait_container_is_ready(transformer_bee_container)
+    wait_for_logs(transformer_bee_container, r".*Application started\. Press Ctrl\+C to shut down\..*", timeout=30)
     port_on_localhost = transformer_bee_container.get_exposed_port(_TRANSFORMER_BEE_HTTP_REST_PORT)
     yield int(port_on_localhost)
     transformer_bee_container.stop()
