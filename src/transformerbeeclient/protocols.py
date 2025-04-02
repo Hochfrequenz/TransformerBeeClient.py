@@ -32,3 +32,6 @@ class TransformerBeeClient(CanConvertToEdifact, CanConvertToBo4e):
     """
     Transformer.bee can convert to and from edifact
     """
+
+
+__all__ = ["CanConvertToEdifact", "CanConvertToBo4e", "TransformerBeeClient"]
