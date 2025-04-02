@@ -36,7 +36,7 @@ class _ClientSessionMixin:  # pylint:disable=too-few-public-methods
     Mixin for classes which need a client session
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._session_lock = asyncio.Lock()
         self._session: Optional[ClientSession] = None
         self._session_usage_counter = count()
@@ -101,7 +101,7 @@ class _ClientSessionMixin:  # pylint:disable=too-few-public-methods
                 _logger.debug("reusing aiohttp session (%i)", number_of_times_this_session_has_been_used)
         return self._session
 
-    async def close_session(self):
+    async def close_session(self) -> None:
         """
         closes the client session
         """
@@ -117,10 +117,10 @@ class _ValidateTokenMixin:  # pylint:disable=too-few-public-methods
     Mixin for classes which need to validate tokens
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._session_lock = asyncio.Lock()
 
-    def _token_is_valid(self, token) -> bool:
+    def _token_is_valid(self, token: str) -> bool:
         """
         returns true iff the token expiration date is far enough in the future. By "enough" I mean:
         more than 1 minute (because the clients' request using the token shouldn't take longer than that)
@@ -285,7 +285,9 @@ class AuthenticatedTransformerBeeClient(
     A client for the transformer.bee API (with OAuth2 authentication)
     """
 
-    def __init__(self, base_url: URL | str, oauth_client_id: str, oauth_client_secret: str, **kwargs):
+    def __init__(  # type:ignore[no-untyped-def]
+        self, base_url: URL | str, oauth_client_id: str, oauth_client_secret: str, **kwargs
+    ) -> None:
         if isinstance(base_url, str):
             _base_url = URL(base_url)
         else:
@@ -314,3 +316,6 @@ class AuthenticatedTransformerBeeClient(
         session = await self._get_session()
         result = await self._convert_to_edifact(session, self._base_url, boney_comb, edifact_format_version)
         return result
+
+
+__all__ = ["TransformerBeeClient", "AuthenticatedTransformerBeeClient", "UnauthenticatedTransformerBeeClient"]
