@@ -318,4 +318,4 @@ class AuthenticatedTransformerBeeClient(
         return result
 
 
-__all__ = ["TransformerBeeClient", "AuthenticatedTransformerBeeClient", "UnauthenticatedTransformerBeeClient"]
+__all__ = ["AuthenticatedTransformerBeeClient", "UnauthenticatedTransformerBeeClient"]
