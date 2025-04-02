@@ -5,7 +5,10 @@ import pytest
 from docker.errors import DockerException
 from testcontainers.core.container import DockerContainer  # type:ignore[import-untyped]
 from testcontainers.core.network import Network  # type:ignore[import-untyped]
-from testcontainers.core.waiting_utils import wait_container_is_ready, wait_for_logs  # type:ignore[import-untyped]
+from testcontainers.core.waiting_utils import (  # type:ignore[import-untyped]
+    wait_container_is_ready,
+    wait_for_logs,
+)
 from yarl import URL
 
 from transformerbeeclient import (
