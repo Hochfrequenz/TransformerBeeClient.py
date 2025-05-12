@@ -299,6 +299,7 @@ class AuthenticatedTransformerBeeClient(
             oauth_token_url=_hochfrequenz_token_url,
             **kwargs,
         )
+        TransformerBeeClient.__init__(self)
         _ClientSessionMixin.__init__(self)
 
     async def convert_to_bo4e(self, edifact: str, edifact_format_version: EdifactFormatVersion) -> list[Marktnachricht]:
