@@ -279,7 +279,7 @@ _hochfrequenz_token_url = URL("https://hochfrequenz.eu.auth0.com/oauth/token")
 
 
 class AuthenticatedTransformerBeeClient(
-    TransformerBeeClient, _OAuthHttpClient, _ClientSessionMixin, _TransformerBeeClientBaseMixin
+    _OAuthHttpClient, _ClientSessionMixin, _TransformerBeeClientBaseMixin, TransformerBeeClient
 ):  # pylint:disable=too-few-public-methods, too-many-ancestors # sorry so sorry
     """
     A client for the transformer.bee API (with OAuth2 authentication)
@@ -299,7 +299,6 @@ class AuthenticatedTransformerBeeClient(
             oauth_token_url=_hochfrequenz_token_url,
             **kwargs,
         )
-        TransformerBeeClient.__init__(self)
         _ClientSessionMixin.__init__(self)
 
     async def convert_to_bo4e(self, edifact: str, edifact_format_version: EdifactFormatVersion) -> list[Marktnachricht]:
