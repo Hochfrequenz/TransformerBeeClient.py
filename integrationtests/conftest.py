@@ -86,5 +86,5 @@ async def oauthenticated_client() -> AsyncGenerator[TransformerBeeClient, None]:
     client = AuthenticatedTransformerBeeClient(
         _test_system_url, oauth_client_id=client_id, oauth_client_secret=client_secret
     )
-    yield client  # type:ignore[misc]
+    yield client
     await client.close_session()
