@@ -280,7 +280,7 @@ _hochfrequenz_token_url = URL("https://hochfrequenz.eu.auth0.com/oauth/token")
 
 class AuthenticatedTransformerBeeClient(
     TransformerBeeClient, _OAuthHttpClient, _ClientSessionMixin, _TransformerBeeClientBaseMixin
-):  # pylint:disable=too-few-public-methods
+):  # pylint:disable=too-few-public-methods, too-many-ancestors # sorry so sorry
     """
     A client for the transformer.bee API (with OAuth2 authentication)
     """
