@@ -20,8 +20,9 @@ anyio==4.12.0
     # via httpx
 attrs==25.4.0
     # via aiohttp
-backports-zstd==1.1.0
+# backports-zstd==1.1.0
     # via aiohttp
+    # https://github.com/Rogdham/backports.zstd/issues/50
 brotli==1.2.0
     # via aiohttp
 certifi==2025.11.12
