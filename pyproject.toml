@@ -52,7 +52,7 @@ tests = [
 type_check = [
     "mypy[pydantic]==1.15.0",
     "types-pytz==2025.2.0.20250516",
-    "types-docker==7.1.0.20241229"
+    "types-docker==7.1.0.20251129"
 ]
 
 [project.urls]
