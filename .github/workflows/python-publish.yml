@@ -20,7 +20,7 @@ jobs:
         python-version: [ "3.14" ]
         os: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:
@@ -63,7 +63,7 @@ jobs:
     needs: tests # Never ever do we want to release without passing tests.
     # Once your downstream code relies on a broken but released version of a library, you're in trouble.
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
         with:
