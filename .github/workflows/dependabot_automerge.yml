@@ -14,7 +14,7 @@ jobs:
       PR_URL: ${{github.event.workflow_run.event.pull_request.html_url}}
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Set up Git
@@ -26,7 +26,7 @@ jobs:
       - name: Push empty commit
         run: git push
       - name: Wait for tests to succeed
-        uses: lewagon/wait-on-check-action@v1.3.4
+        uses: lewagon/wait-on-check-action@v1.4.1
         with:
           ref: ${{ github.ref }}
           running-workflow-name: "dependabot"
