@@ -40,7 +40,7 @@ linting = [
 ]
 packaging = [
     "build==1.2.2.post1",
-    "twine==6.1.0"
+    "twine==6.2.0"
 ]
 spellcheck = [
     "codespell==2.4.1"
