@@ -26,7 +26,7 @@ jobs:
       - name: Push empty commit
         run: git push
       - name: Wait for tests to succeed
-        uses: lewagon/wait-on-check-action@v1.3.4
+        uses: lewagon/wait-on-check-action@v1.4.1
         with:
           ref: ${{ github.ref }}
           running-workflow-name: "dependabot"
