@@ -32,11 +32,11 @@ coverage = [
     "coverage==7.8.0"
 ]
 formatting = [
-    "black==25.11.0",
+    "black==25.12.0",
     "isort==7.0.0"
 ]
 linting = [
-    "pylint==3.3.7"
+    "pylint==4.0.4"
 ]
 packaging = [
     "build==1.3.0",
