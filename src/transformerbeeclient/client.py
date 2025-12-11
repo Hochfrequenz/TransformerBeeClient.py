@@ -289,7 +289,7 @@ class PreauthorizedTransformerBeeClient(
 
     def __init__(self, base_url: URL | str, authorization_header: str):
         """
-        instantiate by providing the base URL and the authorization header value
+        Instantiate by providing the base URL and the authorization header value
         :param base_url: e.g. https://transformerbee.utilibee.io/ or https://localhost:5021
         :param authorization_header: the Authorization header value, e.g. "Bearer your-token" or "Basic dXNlcjpwYXNz"
         """
