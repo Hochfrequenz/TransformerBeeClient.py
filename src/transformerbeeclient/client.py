@@ -261,6 +261,22 @@ class UnauthenticatedTransformerBeeClient(
         TransformerBeeClient.__init__(self)
         self._base_url = URL(base_url)
 
+    async def convert_to_bo4e(self, edifact: str, edifact_format_version: EdifactFormatVersion) -> list[Marktnachricht]:
+        """
+        converts the given edifact to a list of marktnachrichten
+        """
+        session = await self._get_session()
+        result = await self._convert_to_bo4e(session, self._base_url, edifact, edifact_format_version)
+        return result
+
+    async def convert_to_edifact(self, boney_comb: BOneyComb, edifact_format_version: EdifactFormatVersion) -> str:
+        """
+        converts the given boneycomb to an edifact
+        """
+        session = await self._get_session()
+        result = await self._convert_to_edifact(session, self._base_url, boney_comb, edifact_format_version)
+        return result
+
 
 class PreauthorizedTransformerBeeClient(
     TransformerBeeClient, _ClientSessionMixin, _TransformerBeeClientBaseMixin
