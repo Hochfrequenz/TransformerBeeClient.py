@@ -29,4 +29,4 @@ class Marktnachricht(BaseModel):
     """
 
 
-_ListOfMarktnachricht = RootModel(list[Marktnachricht])
+_LIST_OF_MARKTNACHRICHT = RootModel(list[Marktnachricht])
