@@ -287,15 +287,17 @@ class PreauthorizedTransformerBeeClient(
     This client does not manage token refresh - it uses the provided authorization header as-is.
     """
 
-    def __init__(self, base_url: URL | str, authorization_header: str):
+    def __init__(self, base_url: URL, authorization_header: str):
         """
         Instantiate by providing the base URL and the authorization header value
-        :param base_url: e.g. https://transformerbee.utilibee.io/ or https://localhost:5021
+        :param base_url: e.g. URL("https://transformerbee.utilibee.io/") or URL("https://localhost:5021")
         :param authorization_header: the Authorization header value, e.g. "Bearer your-token" or "Basic dXNlcjpwYXNz"
         """
+        if not isinstance(base_url, URL):
+            raise ValueError(f"Pass the base URL as yarl URL or bad things will happen. Got {base_url.__class__}")
         _ClientSessionMixin.__init__(self)
         TransformerBeeClient.__init__(self)
-        self._base_url = URL(base_url)
+        self._base_url = base_url
         self._authorization_header = authorization_header
 
     async def convert_to_bo4e(self, edifact: str, edifact_format_version: EdifactFormatVersion) -> list[Marktnachricht]:
