@@ -55,6 +55,19 @@ client = AuthenticatedTransformerBeeClient(
 )
 ```
 
+#### Pre-authorized with Existing Token
+If you already have an authorization token (e.g., from another service or a custom auth flow), you can use the `PreauthorizedTransformerBeeClient` class:
+```python
+from yarl import URL
+from transformerbeeclient import PreauthorizedTransformerBeeClient
+
+client = PreauthorizedTransformerBeeClient(
+    base_url=URL("https://transformer.utilibee.io"),
+    authorization_header="Bearer your-token-here",  # or "Basic dXNlcjpwYXNz" for Basic auth
+)
+```
+This client does not manage token refresh - it uses the provided authorization header as-is.
+
 #### Minimal Working Examples
 Find full examples of both conversions in [the integration tests](integrationtests/test_conversion.py).
 Find the respective BO4E and EDIFACTs in [the test data folder](integrationtests/TestEdifact).

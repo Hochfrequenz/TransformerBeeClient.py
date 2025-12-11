@@ -206,6 +206,9 @@ class _TransformerBeeClientBaseMixin:  # pylint:disable=too-few-public-methods
             token = await self._get_oauth_token()
             headers = {"Authorization": f"Bearer {token}"}
             response = await session.post(json=request_body.model_dump(by_alias=True), url=url, headers=headers)
+        elif hasattr(self, "_authorization_header"):
+            headers = {"Authorization": self._authorization_header}
+            response = await session.post(json=request_body.model_dump(by_alias=True), url=url, headers=headers)
         else:
             response = await session.post(json=request_body.model_dump(by_alias=True), url=url)
         return response
@@ -257,6 +260,27 @@ class UnauthenticatedTransformerBeeClient(
         _ClientSessionMixin.__init__(self)
         TransformerBeeClient.__init__(self)
         self._base_url = URL(base_url)
+
+
+class PreauthorizedTransformerBeeClient(
+    TransformerBeeClient, _ClientSessionMixin, _TransformerBeeClientBaseMixin
+):  # pylint:disable=too-few-public-methods
+    """
+    A client for the transformer.bee API with a pre-set authorization header.
+    Use this when you already have an authorization token (e.g., from another service or a custom auth flow).
+    This client does not manage token refresh - it uses the provided authorization header as-is.
+    """
+
+    def __init__(self, base_url: URL | str, authorization_header: str):
+        """
+        instantiate by providing the base URL and the authorization header value
+        :param base_url: e.g. https://transformerbee.utilibee.io/ or https://localhost:5021
+        :param authorization_header: the Authorization header value, e.g. "Bearer your-token" or "Basic dXNlcjpwYXNz"
+        """
+        _ClientSessionMixin.__init__(self)
+        TransformerBeeClient.__init__(self)
+        self._base_url = URL(base_url)
+        self._authorization_header = authorization_header
 
     async def convert_to_bo4e(self, edifact: str, edifact_format_version: EdifactFormatVersion) -> list[Marktnachricht]:
         """
@@ -318,4 +342,8 @@ class AuthenticatedTransformerBeeClient(
         return result
 
 
-__all__ = ["AuthenticatedTransformerBeeClient", "UnauthenticatedTransformerBeeClient"]
+__all__ = [
+    "AuthenticatedTransformerBeeClient",
+    "PreauthorizedTransformerBeeClient",
+    "UnauthenticatedTransformerBeeClient",
+]
