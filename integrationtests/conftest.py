@@ -13,6 +13,7 @@ from yarl import URL
 
 from transformerbeeclient import (
     AuthenticatedTransformerBeeClient,
+    PreauthorizedTransformerBeeClient,
     TransformerBeeClient,
     UnauthenticatedTransformerBeeClient,
 )
@@ -86,5 +87,28 @@ async def oauthenticated_client() -> AsyncGenerator[TransformerBeeClient, None]:
     client = AuthenticatedTransformerBeeClient(
         _test_system_url, oauth_client_id=client_id, oauth_client_secret=client_secret
     )
+    yield client
+    await client.close_session()
+
+
+@pytest.fixture
+async def preauthorized_client() -> AsyncGenerator[TransformerBeeClient, None]:
+    """
+    A fixture that yields a pre-authorized client for the transformer.bee API.
+    It first obtains a token using the OAuth flow, then uses that token with the PreauthorizedTransformerBeeClient.
+    """
+    # Those env variables shall be set by the Integration Test GitHub Action
+    client_id = os.environ.get("AUTH0_TEST_CLIENT_ID")
+    client_secret = os.environ.get("AUTH0_TEST_CLIENT_SECRET")
+    assert client_id is not None
+    assert client_secret is not None  # <-- use pytest.skip instead of assert for local tests
+    # First, get a token using the authenticated client
+    auth_client = AuthenticatedTransformerBeeClient(
+        _test_system_url, oauth_client_id=client_id, oauth_client_secret=client_secret
+    )
+    token = await auth_client._get_oauth_token()  # pylint:disable=protected-access
+    await auth_client.close_session()
+    # Now use that token with the preauthorized client
+    client = PreauthorizedTransformerBeeClient(_test_system_url, authorization_header=f"Bearer {token}")
     yield client
     await client.close_session()

@@ -206,6 +206,9 @@ class _TransformerBeeClientBaseMixin:  # pylint:disable=too-few-public-methods
             token = await self._get_oauth_token()
             headers = {"Authorization": f"Bearer {token}"}
             response = await session.post(json=request_body.model_dump(by_alias=True), url=url, headers=headers)
+        elif hasattr(self, "_authorization_header"):
+            headers = {"Authorization": self._authorization_header}
+            response = await session.post(json=request_body.model_dump(by_alias=True), url=url, headers=headers)
         else:
             response = await session.post(json=request_body.model_dump(by_alias=True), url=url)
         return response
@@ -275,6 +278,45 @@ class UnauthenticatedTransformerBeeClient(
         return result
 
 
+class PreauthorizedTransformerBeeClient(
+    TransformerBeeClient, _ClientSessionMixin, _TransformerBeeClientBaseMixin
+):  # pylint:disable=too-few-public-methods
+    """
+    A client for the transformer.bee API with a pre-set authorization header.
+    Use this when you already have an authorization token (e.g., from another service or a custom auth flow).
+    This client does not manage token refresh - it uses the provided authorization header as-is.
+    """
+
+    def __init__(self, base_url: URL, authorization_header: str):
+        """
+        Instantiate by providing the base URL and the authorization header value
+        :param base_url: e.g. URL("https://transformerbee.utilibee.io/") or URL("https://localhost:5021")
+        :param authorization_header: the Authorization header value, e.g. "Bearer your-token" or "Basic dXNlcjpwYXNz"
+        """
+        if not isinstance(base_url, URL):
+            raise ValueError(f"Pass the base URL as yarl URL or bad things will happen. Got {base_url.__class__}")
+        _ClientSessionMixin.__init__(self)
+        TransformerBeeClient.__init__(self)
+        self._base_url = base_url
+        self._authorization_header = authorization_header
+
+    async def convert_to_bo4e(self, edifact: str, edifact_format_version: EdifactFormatVersion) -> list[Marktnachricht]:
+        """
+        converts the given edifact to a list of marktnachrichten
+        """
+        session = await self._get_session()
+        result = await self._convert_to_bo4e(session, self._base_url, edifact, edifact_format_version)
+        return result
+
+    async def convert_to_edifact(self, boney_comb: BOneyComb, edifact_format_version: EdifactFormatVersion) -> str:
+        """
+        converts the given boneycomb to an edifact
+        """
+        session = await self._get_session()
+        result = await self._convert_to_edifact(session, self._base_url, boney_comb, edifact_format_version)
+        return result
+
+
 _hochfrequenz_token_url = URL("https://hochfrequenz.eu.auth0.com/oauth/token")
 
 
@@ -318,4 +360,8 @@ class AuthenticatedTransformerBeeClient(
         return result
 
 
-__all__ = ["AuthenticatedTransformerBeeClient", "UnauthenticatedTransformerBeeClient"]
+__all__ = [
+    "AuthenticatedTransformerBeeClient",
+    "PreauthorizedTransformerBeeClient",
+    "UnauthenticatedTransformerBeeClient",
+]
