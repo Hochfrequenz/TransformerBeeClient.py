@@ -67,8 +67,9 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-# Standing globs (cover files that do not exist yet): mirror the old tests/.pylintrc disables
-# and the conventional test-suite relaxations for assert-based tests and magic-value comparisons.
+# Standing globs (cover files that do not exist yet): mirror the old unittests/.pylintrc and
+# integrationtests/.pylintrc disables plus the conventional test-suite relaxations for
+# assert-based tests and magic-value comparisons.
 "unittests/**" = [
     "S101",    # assert (asserts are the point of a test suite)
     "PLR2004", # magic-value-comparison
