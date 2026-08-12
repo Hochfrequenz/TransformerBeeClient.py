@@ -4,16 +4,16 @@ on: [ push, pull_request ]
 jobs:
   coverage:
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}/src
     steps:
       - uses: actions/checkout@v6
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v9.0.0
         with:
           python-version: 3.14
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install tox
+        run: uv sync --group coverage
       - name: Log into registry
         # GHCR_PAT is a personal access token for the Github Container Registry; You can create it using the following steps:
         # 1) Go to https://github.com/settings/tokens
@@ -29,5 +29,9 @@ jobs:
         env: # this is for the tests with real oauth-checks
           AUTH0_TEST_CLIENT_ID: ${{ secrets.AUTH0_TEST_CLIENT_ID }}
           AUTH0_TEST_CLIENT_SECRET: ${{ secrets.AUTH0_TEST_CLIENT_SECRET }}
+        # note, that we collect the coverage from the integration test path here!
         run: |
-          tox -e coverage
+          cd integrationtests
+          uv run coverage run -m pytest
+          uv run coverage html --omit integrationtests/*
+          uv run coverage report --fail-under 84 --omit integrationtests/*
