@@ -22,7 +22,7 @@ jobs:
     env:
       PYTHONPATH: src
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install uv
         uses: astral-sh/setup-uv@v9.0.0
         with:
@@ -62,7 +62,7 @@ jobs:
     needs: tests # Never ever do we want to release without passing tests.
     # Once your downstream code relies on a broken but released version of a library, you're in trouble.
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install uv
         uses: astral-sh/setup-uv@v9.0.0
         with:
