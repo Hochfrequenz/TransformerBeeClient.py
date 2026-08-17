@@ -245,9 +245,7 @@ class _TransformerBeeClientBaseMixin:  # pylint:disable=too-few-public-methods
         return response_model.edifact
 
 
-class UnauthenticatedTransformerBeeClient(
-    TransformerBeeClient, _ClientSessionMixin, _TransformerBeeClientBaseMixin
-):  # pylint:disable=too-few-public-methods
+class UnauthenticatedTransformerBeeClient(TransformerBeeClient, _ClientSessionMixin, _TransformerBeeClientBaseMixin):  # pylint:disable=too-few-public-methods
     """
     A client for the transformer.bee API (without authentication)
     """
@@ -278,9 +276,7 @@ class UnauthenticatedTransformerBeeClient(
         return result
 
 
-class PreauthorizedTransformerBeeClient(
-    TransformerBeeClient, _ClientSessionMixin, _TransformerBeeClientBaseMixin
-):  # pylint:disable=too-few-public-methods
+class PreauthorizedTransformerBeeClient(TransformerBeeClient, _ClientSessionMixin, _TransformerBeeClientBaseMixin):  # pylint:disable=too-few-public-methods
     """
     A client for the transformer.bee API with a pre-set authorization header.
     Use this when you already have an authorization token (e.g., from another service or a custom auth flow).
