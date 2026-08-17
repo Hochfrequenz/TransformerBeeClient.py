@@ -5,10 +5,7 @@ import pytest
 from docker.errors import DockerException
 from testcontainers.core.container import DockerContainer  # type:ignore[import-untyped]
 from testcontainers.core.network import Network  # type:ignore[import-untyped]
-from testcontainers.core.waiting_utils import (  # type:ignore[import-untyped]
-    wait_container_is_ready,
-    wait_for_logs,
-)
+from testcontainers.core.wait_strategies import HttpWaitStrategy  # type:ignore[import-untyped]
 from yarl import URL
 
 from transformerbeeclient import (
@@ -45,13 +42,17 @@ def start_transformer_bee_on_localhost(docker_network: Network) -> Generator[int
     Starts transformer.bee.
     Yields the exposed http (REST) port.
     """
-    transformer_bee_container = DockerContainer("ghcr.io/enercity/edifact-bo4e-converter/edifactbo4econverter:v1.4.1")
+    transformer_bee_container = DockerContainer("ghcr.io/enercity/edifact-bo4e-converter/edifactbo4econverter:v1.31.0")
     transformer_bee_container.with_network(docker_network)
     transformer_bee_container.with_exposed_ports(_TRANSFORMER_BEE_HTTP_REST_PORT)
     transformer_bee_container.with_env("StorageProvider", "Directory")
+    # Since the converter switched to structured (JSON) logging, it no longer emits the
+    # "Application started. Press Ctrl+C to shut down." line, so we poll the /version endpoint
+    # (the same one used as readiness probe in the converter's kubernetes deployment) instead.
+    transformer_bee_container.waiting_for(
+        HttpWaitStrategy(_TRANSFORMER_BEE_HTTP_REST_PORT, "/version").for_status_code(200).with_startup_timeout(120)
+    )
     transformer_bee_container.start()
-    wait_container_is_ready(transformer_bee_container)
-    wait_for_logs(transformer_bee_container, r".*Application started\. Press Ctrl\+C to shut down\..*", timeout=30)
     port_on_localhost = transformer_bee_container.get_exposed_port(_TRANSFORMER_BEE_HTTP_REST_PORT)
     yield int(port_on_localhost)
     transformer_bee_container.stop()
