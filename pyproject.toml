@@ -102,7 +102,7 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 tests = [
-    "pytest==8.3.5",
+    "pytest==9.1.1",
     "pytest-asyncio==1.3.0",
     "testcontainers==4.13.3"
 ]
@@ -111,14 +111,14 @@ coverage = [
     {include-group = "tests"}
 ]
 linting = [
-    "ruff==0.16.2",
+    "ruff==0.16.3",
     {include-group = "tests"}
 ]
 spell_check = [
     "codespell==2.4.1"
 ]
 type_check = [
-    "mypy[pydantic]==1.15.0",
+    "mypy[pydantic]==2.3.0",
     "types-pytz==2025.2.0.20250516",
     "types-docker==7.1.0.20251129",
     {include-group = "tests"}
