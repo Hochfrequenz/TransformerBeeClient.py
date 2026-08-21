@@ -120,7 +120,7 @@ spell_check = [
 type_check = [
     "mypy[pydantic]==2.3.0",
     "types-pytz==2026.3.1.20260727",
-    "types-docker==7.1.0.20251129",
+    "types-docker==7.2.0.20260813",
     {include-group = "tests"}
 ]
 dev = [
